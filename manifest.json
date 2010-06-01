@@ -1,7 +1,7 @@
 {
   // Required
   "name": "try-clojure-in-chrome",
-  "version": "0.1",
+  "version": "0.1.1",
 
   // Recommended
   "description": "A fast way to start clojure repl in google chrome",
