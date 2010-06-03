@@ -5,6 +5,29 @@
   <script src="resources/public/javascript/tryclojure.js" type="text/javascript"></script>
   <title>TryClojure</title>
   <script type="text/javascript">
+
+    function loadHistory (c)
+    {
+      for (var i = 0, cnt = localStorage.length; i < cnt; ++i)
+        {
+          var line = localStorage.getItem ("history_" + i);
+          if (line != "" && line != null)
+            c.addToHistory (line);
+        }
+    }
+
+    function addToHistory (line)
+    {
+      var index = localStorage.getItem ("index") * 1;
+      var depth = localStorage.getItem ("historyDepth") * 1;
+
+      if (index >= depth)
+        index = 0;
+
+      localStorage.setItem ("history_" + index, line);
+      localStorage.setItem ("index", index + 1);
+    }
+
     function constructHandle (console_) 
     {
       var selection = "";
@@ -14,12 +37,16 @@
 
           port.onMessage.addListener (function (info) 
             {
-              console.log ("port.onMessage", info, tab, port);
-              console.log (console_);
-              //console.log (controller);
+              loadHistory (console_);
+              console_.historyChangeHandler (addToHistory);
+              
               selection = info.selection;
-              console_.promptText (selection);
-              console_.commandTrigger ();
+              if (selection != "")
+                {
+                  console_.promptText (selection);
+                  console_.handleCommand ();
+                }
+
             });
         });
 

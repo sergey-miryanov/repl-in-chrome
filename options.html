@@ -1,0 +1,47 @@
+<html>
+<head><title>try-clojure-in-chrome options</title></head>
+<script type="text/javascript">
+
+// Saves options to localStorage.
+function save_options() {
+  var text = document.getElementById ("historyDepth");
+  var log = document.getElementById ("log");
+  localStorage.setItem ("historyDepth", text.value);
+  localStorage.setItem ("log", log.value);
+
+  //// Update status to let user know options were saved.
+  //var status = document.getElementById("status");
+  //status.innerHTML = "Options Saved.";
+  //setTimeout(function() {
+  //  status.innerHTML = "";
+  //}, 750);
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() 
+{
+  var historyDepth = localStorage.getItem ("historyDepth") * 1;
+  var logValue = localStorage.getItem ("log") && true;
+  if (!historyDepth) 
+    {
+      historyDepth = "500";
+    }
+
+  localStorage.clear ();
+  var text = document.getElementById ("historyDepth");
+  var log = document.getElementById ("log");
+
+  text.value = historyDepth;
+  log.value = logValue;
+}
+
+</script>
+
+<body onload="restore_options()">
+
+History depth: <input type="text" name="historyDepth" id="historyDepth" /><br />
+Log: <input type="checkbox" name="log" id="log" value="true" /><br />
+<button onclick="save_options()">Save</button>
+</body>
+</html>
+

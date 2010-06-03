@@ -83,6 +83,10 @@
           ? config.constructHandle 
           : null
         ;
+        var addToHistoryHandle = config && config.addToHistoryHandle
+          ? config.addToHistoryHandle
+          : null
+        ;
 
         ////////////////////////////////////////////////////////////////////////
         // Main entry point
@@ -103,7 +107,12 @@
             }
             extern.inner = inner;
             extern.scrollToBottom = scrollToBottom;
-            extern.commandTrigger = commandTrigger;
+            extern.handleCommand = handleCommand;
+            extern.addToHistory = addToHistory;
+
+            extern.historyChangeHandler = function (handler) {
+              addToHistoryHandle = handler;
+            }
 
             if (constructHandle != null)
               {
@@ -315,6 +324,9 @@
 
         // Add something to the history ring
         function addToHistory(line){
+            if (addToHistoryHandle)
+              addToHistoryHandle (line);
+
             history.push(line);
             restoreText = '';
         };
