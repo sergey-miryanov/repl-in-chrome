@@ -2,12 +2,19 @@
 <head><title>try-clojure-in-chrome options</title></head>
 <script type="text/javascript">
 
+function reset_storage () 
+{
+  localStorage.clear ();
+  restore_options ();
+}
+
 // Saves options to localStorage.
-function save_options() {
+function save_options() 
+{
   var text = document.getElementById ("historyDepth");
-  var log = document.getElementById ("log");
+  var select = document.getElementById ("logLevel");
   localStorage.setItem ("historyDepth", text.value);
-  localStorage.setItem ("log", log.value);
+  localStorage.setItem ("logLevel", select.children[select.selectedIndex].value);
 
   //// Update status to let user know options were saved.
   //var status = document.getElementById("status");
@@ -21,18 +28,29 @@ function save_options() {
 function restore_options() 
 {
   var historyDepth = localStorage.getItem ("historyDepth") * 1;
-  var logValue = localStorage.getItem ("log") && true;
+  var logLevel = localStorage.getItem ("logLevel") * 1;
   if (!historyDepth) 
     {
       historyDepth = "500";
     }
+  if (!logLevel)
+    {
+      logLevel = 1;
+    }
 
-  localStorage.clear ();
   var text = document.getElementById ("historyDepth");
-  var log = document.getElementById ("log");
+  var select = document.getElementById ("logLevel");
 
   text.value = historyDepth;
-  log.value = logValue;
+  for (var i = 0; i < select.children.length; i++) 
+    {
+      var child = select.children[i];
+      if (child.value == logLevel) 
+        {
+          child.selected = "true";
+          break;
+        }
+    }
 }
 
 </script>
@@ -40,8 +58,15 @@ function restore_options()
 <body onload="restore_options()">
 
 History depth: <input type="text" name="historyDepth" id="historyDepth" /><br />
-Log: <input type="checkbox" name="log" id="log" value="true" /><br />
+Log: 
+<select id="logLevel">
+ <option value="1">DEBUG</option>
+ <option value="2">TRACE</option>
+ <option value="3">INFO</option>
+</select>
+<br />
 <button onclick="save_options()">Save</button>
+<button onclick="reset_storage ()">Reset history storage</button>
 </body>
 </html>
 

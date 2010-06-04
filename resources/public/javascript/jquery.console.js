@@ -107,7 +107,7 @@
             }
             extern.inner = inner;
             extern.scrollToBottom = scrollToBottom;
-            extern.handleCommand = handleCommand;
+            extern.commandTrigger = commandTrigger;
             extern.addToHistory = addToHistory;
 
             extern.historyChangeHandler = function (handler) {

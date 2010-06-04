@@ -6,13 +6,38 @@
   <title>TryClojure</title>
   <script type="text/javascript">
 
+    var DEBUG = 1;
+    var TRACE = 2;
+    var INFO = 3;
+    function logLevel () 
+    {
+      var logLevel_ = localStorage.getItem ("logLevel") * 1;
+      if (!logLevel_)
+        {
+          logLevel_ = DEBUG;
+        }
+
+      return logLevel_;
+    }
+
     function loadHistory (c)
     {
+      if (logLevel () <= INFO)
+        {
+          console.info ("[INFO] Load history");
+        }
       for (var i = 0, cnt = localStorage.length; i < cnt; ++i)
         {
           var line = localStorage.getItem ("history_" + i);
           if (line != "" && line != null)
-            c.addToHistory (line);
+            {
+              if (logLevel () <= DEBUG)
+                {
+                  console.debug ("[DEBUG] Try to add to console from history: ", line);
+                }
+
+              c.addToHistory (line);
+            }
         }
     }
 
@@ -24,6 +49,10 @@
       if (index >= depth)
         index = 0;
 
+      if (logLevel () <= DEBUG)
+        {
+          console.debug ("[DEBUG] Add to history: ", line, " with index ", index);
+        }
       localStorage.setItem ("history_" + index, line);
       localStorage.setItem ("index", index + 1);
     }
@@ -37,14 +66,22 @@
 
           port.onMessage.addListener (function (info) 
             {
+              if (logLevel () <= INFO)
+                {
+                  console.info ("[INFO] port.onMessage.handler");
+                }
               loadHistory (console_);
               console_.historyChangeHandler (addToHistory);
               
               selection = info.selection;
+              if (logLevel () <= DEBUG)
+                {
+                  console.log ("[DEBUG] selection: ", selection);
+                }
               if (selection != "")
                 {
                   console_.promptText (selection);
-                  console_.handleCommand ();
+                  console_.commandTrigger ();
                 }
 
             });
