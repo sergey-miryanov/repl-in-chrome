@@ -1,3 +1,6 @@
+ Version 0.2
+   - Save console history to local storage
+	 - Add log
  Version 0.1.1
    - Fix link to www.try-clojure.org
  Version 0.1
